@@ -129,33 +129,48 @@ if __name__ == '__main__':
     per_reward = 10
     action_fee = 2
     lambda_request_A, lambda_request_B, lambda_return_A, lambda_return_B = 3, 4, 3, 2
+    export_reward,export_trans_prob = False,False
 
-    # #  calculate reward matrix and transition matrix into pkl file
-    # reward = np.zeros((11, 21, 21))
-    # for iax, action in enumerate(range(-5, 6)):
-    #     for isa, state_A in enumerate(range(21)):
-    #         for isb, state_B in enumerate(range(21)):
-    #             reward[action + 5, isa, isb] = reward_function([state_A, state_B], action, action_fee)
-    #
-    # fo = open('C:\\Users\\21130\\Desktop\\RL\\codes\\SUOSUO\\temp_reward', 'wb')
-    # pickle.dump(reward, fo)
-    # fo.close()
-    #
-    # trans_prob = {}
-    # for isa, state_A in enumerate(range(21)):
-    #     for isb, state_B in enumerate(range(21)):
-    #         prob = np.zeros((11, 21, 21))
-    #         for iax, action in enumerate(range(-5, 6)):
-    #             for isna, new_state_A in enumerate(range(21)):
-    #                 for isnb, new_state_B in enumerate(range(21)):
-    #                     prob[iax, new_state_A, new_state_B] = transition_function([state_A, state_B], action,
-    #                                                                               [new_state_A, new_state_B])
-    #         trans_prob[(state_A, state_B)] = prob
-    # #
-    # po = open('C:\\Users\\21130\\Desktop\\RL\\codes\\SUOSUO\\temp_prob', 'wb')
-    # pickle.dump(trans_prob, po)
-    # po.close()
-
+    # #  calculate reward matrix and transition matrix into pkl file， only need to run this block for one time.
+    if not export_reward:
+        reward = np.zeros((11, 21, 21))
+        for iax, action in enumerate(range(-5, 6)):
+            for isa, state_A in enumerate(range(21)):
+                for isb, state_B in enumerate(range(21)):
+                    reward[action + 5, isa, isb] = reward_function([state_A, state_B], action, action_fee)
+                   
+        #export temp_reward function as txt file
+        fo = open('temp_reward', 'wb')
+       
+        pickle.dump(reward, fo)
+        fo.close()
+        export_reward = True
+    
+    if not export_trans_prob:
+        trans_prob = {}
+        for isa, state_A in enumerate(range(21)):
+            for isb, state_B in enumerate(range(21)):
+                prob = np.zeros((11, 21, 21))
+                for iax, action in enumerate(range(-5, 6)):
+                    for isna, new_state_A in enumerate(range(21)):
+                        for isnb, new_state_B in enumerate(range(21)):
+                            prob[iax, new_state_A, new_state_B] = transition_function([state_A, state_B], action,
+                                                                                      [new_state_A, new_state_B])
+                trans_prob[(state_A, state_B)] = prob
+         
+        #export trans_prob_info as txt file
+        po = open('temp_prob', 'wb')
+        pickle.dump(trans_prob, po)
+        po.close()
+        export_trans_prob = True
+    
+    
+    if not export_trans_prob or not export_reward:
+        print('please run the above block first')
+    
+    
+    
+    
     fr = open('temp_reward', 'rb')
     reward_pkl = pickle.load(fr)
     pr = open('temp_prob', 'rb')
