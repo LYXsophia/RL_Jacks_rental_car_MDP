@@ -20,6 +20,7 @@ def cal_transition_prob(lambda_request, lambda_return, old_state, new_state):
     diff = new_state - old_state
     prob = 0
     
+    #if new_state reaches max_car_num( 20 in our case), then we can have more returned cars than 20.
     if new_state == max_car_num:
         state_range = range(0,old_state)
         for num in state_range:
